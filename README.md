@@ -15,8 +15,10 @@ A public key represents a user.
 sequenceDiagram
     participant Client
     participant Server
+    participant Database
     Client->>Server: Public key
     Server-->>Client: Accepted
+    Server->>Database: Add a uesr
 ```
 
 ### Authentication
@@ -27,7 +29,9 @@ JTW is used to authenticate users statelssly.
 sequenceDiagram
     participant Client
     participant Server
+    participant Database
     Client->>Server: Public key
+    Server->>Database: Check if registered
     Server-->>Client: A token encrypted by <br/> client's public key
     Note over Client, Server: The token is a signed JWT <br/> of client's public key.
     Client->>Server: Decrypted token by <br/> my private key
