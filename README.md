@@ -1,16 +1,12 @@
 # Chat Island
 
-The system is currently designed to be used with HTPPS.
-Without HTPPS, it's vulnerable to be attacked by man-in-the-middle attacks.
-
 Instant messaging is built on the top of websocket in real time.
 
-## User and Authentication
-
-Chat Island uses public and private key authentication.
+## Sequence
 
 ### Register
 
+Chat Island uses public and private key authentication.
 A public key represents a user.
 
 ```mermaid
@@ -27,7 +23,8 @@ sequenceDiagram
 
 ### Authentication
 
-JWT is used to authenticate users statelssly.
+After building a websocket connection,
+sending a challenge for authentication.
 
 ```mermaid
 sequenceDiagram
@@ -35,14 +32,12 @@ sequenceDiagram
     participant Server
     Client->>Server: Public key
     Server->>Server: Check if registered
-    Server-->>Client: A token encrypted by <br/> client's public key
-    Note over Client, Server: The token is a signed JWT <br/> of client's public key.
-    Client->>Client: Decrypted token by <br/> my private key
+    Server-->>Client: A random string encrypted by <br/> client's public key
+    Client->>Client: Decrypted challenge by <br/> my private key
+    Client->>Server: Send back raw string
 ```
 
-## Direct Message
-
-### Whisper
+## Whisper
 
 Users can talk with each other via public keys.
 
@@ -52,38 +47,30 @@ sequenceDiagram
     participant Server
     participant Julia
     Arthur->>Server: Hello, Julia.
-    Server->>Server: Encrypt message <br/> by Julia's public key <br/> and save it to DB.
+    Note over Arthur,Server: Encrypted by Julia's public key
+    Server->>Server: Save it to DB and instantly forward.
     Server->>Julia: Encrypted "Hello, Julia."
     Julia->>Julia: Decrypted by my private key.
 ```
 
 ## Chat Room
 
-A public key represents a chat room as well.
-Who holds its private key is the administrator.
+Uers can create a chat room,
+and invite others by adding other public keys into the member list.
 
-### Creation
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Server
-    participant Database
-    Client->>Server: Public key of chat room 
-    Server->>Database: Check if exists
-    Database-->>Server: No
-    Server-->>Client: Accepted
-    Server->>Database: Add a chat room
-```
-
-### Authorization
+Members can query the member list anytime.
 
 ```mermaid
 sequenceDiagram
-    participant Admin
+    participant Arthur
     participant Server
-    Admin->>Server: Room's public key
-    Server->>Server: Check if exists
-    Server-->>Admin: Chat room info encrypted <br/> by its public key
-    Admin->>Admin: Decrypted by its private key
+    participant Others
+    loop For each member
+      Arthur->>Server: "Hello, everyone"
+      Note over Arthur,Server: Encrypted by their public keys
+    end
+    Server->>Server: Save them to DB and immediately forward
+    loop For each member
+      Server-->>Others: Encrypted "Hello, everyone"
+    end
 ```
