@@ -1,0 +1,27 @@
+{
+  "name": "chat-island",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liplum/ChatIsland.git"
+  },
+  "author": "Liplum",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liplum/ChatIsland/issues"
+  },
+  "homepage": "https://github.com/liplum/ChatIsland#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.1.0",
+    "source-map-support": "^0.5.21",
+    "typescript": "^4.9.5"
+  }
+}
