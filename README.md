@@ -33,9 +33,8 @@ JWT is used to authenticate users statelssly.
 sequenceDiagram
     participant Client
     participant Server
-    participant Database
     Client->>Server: Public key
-    Server->>Database: Check if registered
+    Server->>Server: Check if registered
     Server-->>Client: A token encrypted by <br/> client's public key
     Note over Client, Server: The token is a signed JWT <br/> of client's public key.
     Client->>Client: Decrypted token by <br/> my private key
@@ -74,8 +73,17 @@ sequenceDiagram
     Server->>Database: Check if exists
     Database-->>Server: No
     Server-->>Client: Accepted
-    Server->>Database: Create a chat room
+    Server->>Database: Add a chat room
 ```
 
-### User Management
+### Authorization
 
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant Server
+    Admin->>Server: Room's public key
+    Server->>Server: Check if exists
+    Server-->>Admin: Chat room info encrypted <br/> by its public key
+    Admin->>Admin: Decrypted by its private key
+```
