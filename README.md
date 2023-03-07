@@ -3,6 +3,8 @@
 The system is currently designed to be used with HTPPS.
 Without HTPPS, it's vulnerable to be attacked by man-in-the-middle attacks.
 
+Instant messaging is built on the top of websocket in real time.
+
 ## User and Authentication
 
 Chat Island uses public and private key authentication.
@@ -17,6 +19,8 @@ sequenceDiagram
     participant Server
     participant Database
     Client->>Server: Public key
+    Server->>Database: Check if exists
+    Database-->>Server: No
     Server-->>Client: Accepted
     Server->>Database: Add a uesr
 ```
@@ -37,9 +41,7 @@ sequenceDiagram
     Client->>Client: Decrypted token by <br/> my private key
 ```
 
-## Messaging
-
-Instant messaging is built on the top of websocket in real time.
+## Direct Message
 
 ### Whisper
 
@@ -55,3 +57,25 @@ sequenceDiagram
     Server->>Julia: Encrypted "Hello, Julia."
     Julia->>Julia: Decrypted by my private key.
 ```
+
+## Chat Room
+
+A public key represents a chat room as well.
+Who holds its private key is the administrator.
+
+### Creation
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+    participant Database
+    Client->>Server: Public key of chat room 
+    Server->>Database: Check if exists
+    Database-->>Server: No
+    Server-->>Client: Accepted
+    Server->>Database: Create a chat room
+```
+
+### User Management
+
