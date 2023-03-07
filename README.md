@@ -13,12 +13,9 @@ A public key represents a user.
 sequenceDiagram
     participant Client
     participant Server
-    participant Database
     Client->>Server: Public key
-    Server->>Database: Check if exists
-    Database-->>Server: No
-    Server-->>Client: Accepted
-    Server->>Database: Add a uesr
+    Server->>Server: Check if not exists <br/> and register them
+    Server-->>Client: Registered
 ```
 
 ### Authentication
@@ -46,7 +43,7 @@ sequenceDiagram
     participant Arthur
     participant Server
     participant Julia
-    Arthur->>Server: Hello, Julia.
+    Arthur->>Server: "Hello, Julia."
     Note over Arthur,Server: Encrypted by Julia's public key
     Server->>Server: Save it to DB and instantly forward.
     Server->>Julia: Encrypted "Hello, Julia."
@@ -55,8 +52,8 @@ sequenceDiagram
 
 ## Chat Room
 
-Uers can create a chat room,
-and invite others by adding other public keys into the member list.
+Uers can create chat rooms,
+and invite others by adding their public keys into the member list.
 
 Members can query the member list anytime.
 
@@ -64,13 +61,13 @@ Members can query the member list anytime.
 sequenceDiagram
     participant Arthur
     participant Server
-    participant Others
+    participant Other Members
     loop For each member
       Arthur->>Server: "Hello, everyone"
       Note over Arthur,Server: Encrypted by their public keys
     end
     Server->>Server: Save them to DB and immediately forward
     loop For each member
-      Server-->>Others: Encrypted "Hello, everyone"
+      Server-->>Other Members: Encrypted "Hello, everyone"
     end
 ```
