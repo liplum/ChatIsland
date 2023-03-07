@@ -23,7 +23,7 @@ sequenceDiagram
 
 ### Authentication
 
-JTW is used to authenticate users statelssly.
+JWT is used to authenticate users statelssly.
 
 ```mermaid
 sequenceDiagram
@@ -34,5 +34,24 @@ sequenceDiagram
     Server->>Database: Check if registered
     Server-->>Client: A token encrypted by <br/> client's public key
     Note over Client, Server: The token is a signed JWT <br/> of client's public key.
-    Client->>Server: Decrypted token by <br/> my private key
+    Client->>Client: Decrypted token by <br/> my private key
+```
+
+## Messaging
+
+Instant messaging is built on the top of websocket in real time.
+
+### Whisper
+
+Users can talk with each other via public keys.
+
+```mermaid
+sequenceDiagram
+    participant Arthur
+    participant Server
+    participant Julia
+    Arthur->>Server: Hello, Julia.
+    Server->>Server: Encrypt message <br/> by Julia's public key <br/> and save it to DB.
+    Server->>Julia: Encrypted "Hello, Julia."
+    Julia->>Julia: Decrypted by my private key.
 ```
