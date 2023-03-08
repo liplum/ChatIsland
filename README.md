@@ -14,7 +14,7 @@ sequenceDiagram
     participant Client
     participant Server
     Client->>Server: Public key
-    Server->>Server: Check if not exists <br/> and register them
+    Server->>Server: Check if not exists <br/> and register it
     Server-->>Client: Registered
 ```
 

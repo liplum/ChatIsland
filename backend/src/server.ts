@@ -4,6 +4,8 @@ import { publicDecrypt } from "crypto"
 import { type Db, MongoClient, ObjectId, type Int32 } from "mongodb"
 
 
+import { KError } from "./infrastructure.js"
+
 interface ServerOptions {
   dbUri: string
   dbName: string
@@ -33,10 +35,19 @@ async function startServer(ctx: ServerContext) {
   const users = ctx.db.collection("users")
   const chatRooms = ctx.db.collection("chat_rooms")
   const messages = ctx.db.collection("messages")
-  app.post("/register", (req, res) => {
 
+  app.post("/register", async (req, res) => {
+    const publicKey = req.body.publicKey
+    if (await users.findOne({ publicKey }) != null) {
+      return res.status(400).json({ error: KError.userAlreadyExists })
+    }
+    await users.insertOne({
+      publicKey,
+      chatRooms: []
+    })
   })
 
   app.listen(8888, () => {
+
   })
 }
