@@ -2,8 +2,15 @@
   "name": "chat-island",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "dist/index.js",
+  "typings": "src/index.ts",
+  "module": "src/index.ts",
+  "type": "module",
+  "files": [
+    "src/**/*.ts",
+    "dist/**/*.js",
+    "dist/**/*.d.ts"
+  ],
   "scripts": {
     "start": "tsc && node dist/index.js"
   },

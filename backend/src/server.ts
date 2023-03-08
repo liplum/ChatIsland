@@ -2,7 +2,7 @@ import express from "express"
 import cors from "cors"
 import { publicEncrypt } from "crypto"
 import { type Db, MongoClient, ObjectId, type Int32 } from "mongodb"
-import { Server, WebSocket } from 'ws'
+import WebSocket, { WebSocketServer } from 'ws';
 import { IncomingMessage } from "http"
 import { KError } from "./infrastructure.js"
 
@@ -50,13 +50,14 @@ async function startServer(ctx: ServerContext) {
       publicKey,
       chatRooms: []
     })
+    res.status(200).end()
   })
 
   const server = app.listen(8888, () => {
     console.log("Server running at http://localhost:8888")
   })
   const connections = new Map<PublicKey, WebSocket>()
-  const wss = new Server({
+  const wss = new WebSocketServer({
     server, path: "/chat"
   })
   wss.on("connection", async (ws: WebSocket, req: IncomingMessage) => {
