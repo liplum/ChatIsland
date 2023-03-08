@@ -36,9 +36,14 @@ async function startServer(ctx: ServerContext) {
   const chatRooms = ctx.db.collection("chat_rooms")
   const messages = ctx.db.collection("messages")
 
+  async function isRegistered(publicKey: PublicKey): Promise<boolean> {
+    const user = await users.findOne({ publicKey });
+    return user != null
+  }
+
   app.post("/register", async (req, res) => {
     const publicKey = req.body.publicKey
-    if (await users.findOne({ publicKey }) != null) {
+    if (await isRegistered(publicKey)) {
       return res.status(400).json({ error: KError.userAlreadyExists })
     }
     await users.insertOne({
@@ -54,12 +59,14 @@ async function startServer(ctx: ServerContext) {
   const wss = new Server({
     server, path: "/chat"
   })
-  wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
+  wss.on("connection", async (ws: WebSocket, req: IncomingMessage) => {
+    const publicKey = req.headers["publick-key"]
+    // close the websocket if the user isn't registered.
+    if (!publicKey || typeof publicKey !== "string") return ws.close()
+    if (!await isRegistered(publicKey)) return ws.close()
 
     ws.on("message", async (msg) => {
 
     })
-
-
   })
 }
