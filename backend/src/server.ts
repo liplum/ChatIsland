@@ -1,9 +1,9 @@
 import express from "express"
 import cors from "cors"
-import { publicDecrypt } from "crypto"
+import { publicEncrypt } from "crypto"
 import { type Db, MongoClient, ObjectId, type Int32 } from "mongodb"
-
-
+import { Server, WebSocket } from 'ws'
+import { IncomingMessage } from "http"
 import { KError } from "./infrastructure.js"
 
 interface ServerOptions {
@@ -14,7 +14,7 @@ interface ServerOptions {
 interface ServerContext {
   db: Db
 }
-
+type PublicKey = string
 export async function start(options: ServerOptions) {
   const client = new MongoClient(options.dbUri)
   try {
@@ -47,7 +47,19 @@ async function startServer(ctx: ServerContext) {
     })
   })
 
-  app.listen(8888, () => {
+  const server = app.listen(8888, () => {
+    console.log("Server running at http://localhost:8888")
+  })
+  const connections = new Map<PublicKey, WebSocket>()
+  const wss = new Server({
+    server, path: "/chat"
+  })
+  wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
+
+    ws.on("message", async (msg) => {
+
+    })
+
 
   })
 }
