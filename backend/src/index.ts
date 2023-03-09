@@ -5,5 +5,6 @@ sourceMap.install()
 
 await start({
   dbUri: "mongodb://localhost:27017",
-  dbName: "chat_island"
+  dbName: "chat_island",
+  port: 8888
 })

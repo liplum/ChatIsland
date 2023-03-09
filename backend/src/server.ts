@@ -10,10 +10,12 @@ import { KError } from "./infrastructure.js"
 interface ServerOptions {
   dbUri: string
   dbName: string
+  port: number
 }
 
 interface ServerContext {
   db: Db
+  port: number
 }
 type PublicKey = string
 
@@ -23,6 +25,7 @@ export async function start(options: ServerOptions) {
     const db = client.db(options.dbName)
     await startServer({
       db,
+      port: options.port
     })
   } catch (e) {
     client.close()
@@ -55,8 +58,8 @@ async function startServer(ctx: ServerContext) {
     res.status(200).end()
   })
 
-  const server = app.listen(8888, () => {
-    console.log("Server running at http://localhost:8888")
+  const server = app.listen(ctx.port, () => {
+    console.log(`Server running at http://localhost:${ctx.port}`)
   })
   const connections = new Map<PublicKey, WebSocket>()
   const wss = new WebSocketServer({
