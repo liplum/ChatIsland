@@ -40,6 +40,10 @@ module.exports = {
     "no-empty": "warn",
     "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/consistent-type-assertions": "off",
-    "no-multi-spaces": "off"
+    "no-multi-spaces": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "no-misused-promise": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-confusing-void-expression": "off",
   }
 }

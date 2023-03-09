@@ -2,8 +2,9 @@ import express from "express"
 import cors from "cors"
 import { publicEncrypt } from "crypto"
 import { type Db, MongoClient, ObjectId, type Int32 } from "mongodb"
-import WebSocket, { WebSocketServer } from 'ws';
-import { IncomingMessage } from "http"
+import type WebSocket from "ws"
+import { WebSocketServer } from "ws"
+import { type IncomingMessage } from "http"
 import { KError } from "./infrastructure.js"
 
 interface ServerOptions {
@@ -15,6 +16,7 @@ interface ServerContext {
   db: Db
 }
 type PublicKey = string
+
 export async function start(options: ServerOptions) {
   const client = new MongoClient(options.dbUri)
   try {
@@ -37,7 +39,7 @@ async function startServer(ctx: ServerContext) {
   const messages = ctx.db.collection("messages")
 
   async function isRegistered(publicKey: PublicKey): Promise<boolean> {
-    const user = await users.findOne({ publicKey });
+    const user = await users.findOne({ publicKey })
     return user != null
   }
 
